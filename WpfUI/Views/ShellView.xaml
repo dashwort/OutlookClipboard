@@ -1,0 +1,136 @@
+﻿<Window x:Class="WpfUI.Views.ShellView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfUI.Views" xmlns:tb="http://www.hardcodet.net/taskbar" Background="#36507e"
+        mc:Ignorable="d"
+        Title="Outlook Clipboard" Height="600" Width="740" 
+        WindowStartupLocation="CenterScreen" WindowStyle="ThreeDBorderWindow" 
+        BorderBrush="#FF3F3F46" OpacityMask="Black" ResizeMode="NoResize"
+        Visibility="Visible" >
+    <!-- column definition and row definition for main grid -->
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="21.333"/> 
+            <ColumnDefinition Width="188.667"/>
+            <ColumnDefinition Width="60.667"/>
+            <ColumnDefinition Width="149.333"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="20"/>
+        </Grid.RowDefinitions>
+
+        <!--    -->
+        <Grid.Resources>
+            <Style TargetType="{x:Type Button}">
+                <Setter Property="Background" Value="#36507e" />
+                <Setter Property="Foreground" Value="#f1f7fa" />
+                <Setter Property="BorderThickness" Value="2" />
+                <Setter Property="Width" Value="210" />
+                <Setter Property="Height" Value="35" />
+                <Setter Property="Margin" Value="0,5,5,6" />
+            </Style>
+
+            <Style TargetType="{x:Type ContextMenu}">
+                <Setter Property="BorderThickness"
+                Value="1,1,1,1" />
+                <Setter Property="Background" Value="#FF3F3F46"/>
+                <Setter Property="Foreground" Value="#f1f7fa"/>
+                <Setter Property="FontSize" Value="11"/>
+            </Style>
+
+
+        </Grid.Resources>
+
+        <tb:TaskbarIcon
+            x:Name="tb"
+            VerticalAlignment="Top"
+            IconSource="../icons/app_icon.ico"
+            DoubleClickCommand="{Binding DoubleClickCommand}"
+            LeftClickCommand="{Binding LeftClickCommand}">
+            <tb:TaskbarIcon.ContextMenu>
+                <ContextMenu
+                    Background="#FF3F3F46"
+                    Foreground="#f1f7fa"
+                    FontSize="11">
+                    <MenuItem Header="Open Window"
+                              Command="{Binding DoubleClickCommand}"/>
+                    <MenuItem Header="Reset Window"
+                              Command="{Binding ResetPosition}"/>
+                    <MenuItem Header="Exit"
+                               Command="{Binding ExitApplication}"/>
+                </ContextMenu>
+            </tb:TaskbarIcon.ContextMenu>
+        </tb:TaskbarIcon>
+
+
+        <!-- Row 1 -->
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="1" Grid.ColumnSpan="2"
+        ></TextBlock>
+
+        <StackPanel
+            VerticalAlignment="Center"
+            Orientation="Horizontal"
+            Grid.Column="1" 
+            Grid.Row="3"
+            Grid.ColumnSpan="5">
+
+            <Button x:Name="LoadView" 
+                ClickMode="Press" 
+                DataContext="{Binding Primary}"
+                Content="{Binding DisplayNameView}"
+                IsEnabled="{Binding ToLoad}">
+            </Button>
+            <Button x:Name="LoadView2" 
+                ClickMode="Press" 
+                DataContext="{Binding Secondary}"
+                Content="{Binding DisplayNameView}"
+                IsEnabled="{Binding ToLoad}">
+            </Button>
+            <Button x:Name="LoadView3" 
+                ClickMode="Press" 
+                DataContext="{Binding Tertiary}"
+                Content="{Binding DisplayNameView}"
+                IsEnabled="{Binding ToLoad}">
+            </Button>
+            <Button
+                x:Name="LoadConfiguration"
+                ToolTip="Configuration"
+                Height="35"
+                Width="35"
+                BorderThickness="0"
+                ClickMode="Press">
+                
+                <StackPanel>
+                    <Image Source="../icons/config.png" />
+                </StackPanel>
+            </Button>
+
+        </StackPanel>
+
+
+
+        <!-- Row 5 -->
+        <ContentControl 
+            Grid.Row="5" 
+            Grid.Column="1"
+            Grid.ColumnSpan="5"
+            x:Name="ActiveItem"
+            />
+    </Grid>
+</Window>
+

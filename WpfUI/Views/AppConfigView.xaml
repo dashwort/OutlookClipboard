@@ -1,0 +1,286 @@
+﻿<UserControl x:Class="WpfUI.Views.AppConfigView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WpfUI.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="600" Background="#36507e">
+    <Grid>
+        <!-- style -->
+        <Grid.Resources>
+            <Style TargetType="{x:Type ComboBox}">
+                <Setter Property="BorderBrush" Value="#36507e" />
+            </Style>
+            <Style TargetType="{x:Type Button}">
+                <Setter Property="Background" Value="#f1f7fa" />
+                <Setter Property="Width" Value="80" />
+                <Setter Property="Margin" Value="10" />
+            </Style>
+            <Style TargetType="{x:Type Label}">
+                <Setter Property="Background" Value="#36507e" />
+                <Setter Property="Foreground" Value="#f1f7fa" />
+                <Setter Property="Width" Value="90" />
+                <Setter Property="Margin" Value="0,5,5,0" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="FontWeight" Value="Bold" />
+            </Style>
+            <Style TargetType="{x:Type TextBox}">
+                <Setter Property="Background" Value="White" />
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                <Setter Property="VerticalAlignment" Value="Bottom"/>
+                <Setter Property="Margin" Value="5,0,0,0" />
+                <Setter Property="Height" Value="25"/>
+            </Style>
+            <Style TargetType="{x:Type StackPanel}">
+                <Setter Property="Background" Value="#36507e" />
+                <Setter Property="Margin" Value="0,5,5,2" />
+                <Setter Property="Width" Value="300" />
+            </Style>
+        </Grid.Resources>
+        <!-- Column and row definitions -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="5"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="5"/>
+        </Grid.RowDefinitions>
+        <!-- Main vertical stack panel -->
+        <StackPanel
+            Grid.Row="1"
+            Grid.Column="1"
+            Orientation="Vertical">
+            <StackPanel            
+                Grid.RowSpan="2" 
+                Orientation="Horizontal">
+                <Label 
+                   Content="Account Settings"
+                    Width="220"
+                    Height="50"
+                    FontSize="25">
+                </Label>
+
+            </StackPanel>
+            <!-- Add account vertical stack panel -->
+            <StackPanel 
+                Orientation="Vertical"
+                Grid.Row="1"
+                Grid.Column="1"
+                Height="auto">
+                <ListView Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="5" 
+                  ItemsSource="{Binding Path=Accounts}"
+                  AlternationCount="2"
+                  Background="#f1f7fa"
+                  SelectedItem="{Binding Path=SelectedConfiguration}"
+                  SelectionMode="Single"
+                          MinHeight="100"
+                          MaxHeight="300"
+                          Margin="5">
+
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Border BorderBrush="#CCCCCC" 
+                                    BorderThickness="1" 
+                                    Width="267">
+                                <Grid>
+                                    <Grid.Resources>
+                                        <Style TargetType="{x:Type Label}">
+                                            <Setter Property="Foreground" Value="#36507e" />
+                                            <Setter Property="Width" Value="auto" />
+                                            <Setter Property="Margin" Value="0,5,5,0" />
+                                            <Setter Property="HorizontalAlignment" Value="Left" />
+                                            <Setter Property="FontWeight" Value="Bold" />
+                                        </Style>
+                                    </Grid.Resources>
+
+                                    <!-- Column Definitions for Grid within list view-->
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto" ></ColumnDefinition>
+                                        <ColumnDefinition Width="auto" ></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto"></RowDefinition>
+                                    </Grid.RowDefinitions>
+
+                                    <!--ListViewItems contents here -->
+                                    <Label Content="{Binding EmailAddress}" 
+                                       FontSize="14" 
+                                       Grid.Column="0"
+                                       Grid.Row="0"
+                                       FontWeight="Bold" >
+                                    </Label>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <Button HorizontalAlignment="Right"
+                        Margin="0"
+                        Padding="0"
+                        Height="25"
+                        x:Name="RemoveItem"
+                        IsEnabled="{Binding CanRemove}">
+                    Remove
+                </Button>
+                
+                <StackPanel
+                Grid.RowSpan="2"
+                Orientation="Horizontal">
+                    <TextBox 
+                        x:Name="AccountField"
+                        Width="200"
+                        Margin="5,10,5,10">
+                    </TextBox>
+                    <Button x:Name="Add"
+                            
+                        Content="Add">
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel
+            Grid.Column="2"
+            Grid.Row="1">
+            <StackPanel            
+                Grid.RowSpan="2" 
+                Orientation="Horizontal">
+                <Label 
+                   Content="Properties"
+                    Width="220"
+                    Height="40"
+                    FontSize="20">
+                </Label>
+            </StackPanel>
+            <StackPanel             
+                Grid.RowSpan="2" 
+                Orientation="Horizontal">
+                <Label 
+                   Content="Display Name" Grid.RowSpan="2">
+                </Label>
+                <TextBox
+                    Width="200"
+                    x:Name="SelectedConfiguration_DisplayName">
+                </TextBox>
+            </StackPanel>
+            <StackPanel Grid.RowSpan="2"
+                Orientation="Horizontal">
+                <Label
+                    Content="Email Address"
+                    Width="90">
+                </Label>
+                <TextBox
+                    Width="200"
+                    x:Name="SelectedConfiguration_EmailAddress">
+                </TextBox>
+            </StackPanel>
+            <StackPanel         
+                Grid.RowSpan="2"
+                Orientation="Horizontal">
+                <Label 
+                   Content="Search Tag">
+                </Label>
+                <TextBox 
+                    x:Name="SelectedConfiguration_SearchTag"
+                    Width="150">
+                </TextBox>
+            </StackPanel>
+            <StackPanel        
+                Grid.RowSpan="2"
+                Orientation="Horizontal">
+                <Label 
+                   Content="Search Size">
+                </Label>
+                <TextBox 
+                    x:Name="SelectedConfiguration_SearchSize"
+                    Width="40">
+                </TextBox>
+                <Label 
+                   Content="200-300 Emails"
+                    Width="120"
+                    FontWeight="ExtraLight">
+                </Label>
+            </StackPanel>
+            <StackPanel             
+                Grid.RowSpan="2" 
+                Orientation="Horizontal">
+                <Label 
+                   Content="Display Items" Grid.RowSpan="2">
+                </Label>
+                <TextBox 
+                    x:Name="SelectedConfiguration_DisplayItems"
+                    Width="25">
+                </TextBox>
+                <Label 
+                   Content="5-10 Items"
+                    Width="120"
+                    FontWeight="ExtraLight">
+                </Label>
+            </StackPanel>
+            <StackPanel         
+                Grid.RowSpan="2"
+                Orientation="Horizontal">
+                <Label 
+                   Content="Search Timer">
+                </Label>
+                <TextBox 
+                    x:Name="SelectedConfiguration_TimerInterval"
+                    Width="25">
+                </TextBox>
+                <Label 
+                   Content="30-360 seconds"
+                    Width="120"
+                    FontWeight="ExtraLight">
+                </Label>
+            </StackPanel>
+            <StackPanel         
+                Grid.RowSpan="2"
+                Orientation="Horizontal">
+                <Label
+                    Content="Display Index">
+                </Label>
+                <TextBox
+                    Width="25"
+                    x:Name="SelectedConfiguration_DisplayIndex">
+                </TextBox>
+                <Label
+                    Content="1-3 must be unique"
+                    Width="110"
+                    FontWeight="ExtraLight">
+                </Label>
+
+            </StackPanel>
+            <StackPanel         
+                Grid.RowSpan="2"
+                Orientation="Horizontal">
+                <Button
+                    x:Name="SaveConfig"
+                    Content="Save Configuration"
+                    Width="150">
+                </Button>
+
+            </StackPanel>
+
+        </StackPanel>
+
+
+
+
+
+
+
+
+
+    </Grid>
+    
+</UserControl>
+    
