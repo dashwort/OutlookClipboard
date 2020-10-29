@@ -1,7 +1,9 @@
 ﻿using Caliburn.Micro;
+using EmailMemoryClass;
 using Hardcodet.Wpf.TaskbarNotification;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -14,14 +16,17 @@ namespace WpfUI.ViewModels
 {
     public class ShellViewModel : Conductor<object>
     {
+        #region fields
         private List<DisplayContainer> _views;
         private AppConfigViewModel _configWindow = new AppConfigViewModel();
+        private ApplicationSettingsViewModel _appConfig = new ApplicationSettingsViewModel();
         private WindowManager WindowManager = new WindowManager();
 
         private DisplayContainer _primary;
         private DisplayContainer _secondary;
         private DisplayContainer _tertiary;
-        //private Window _keyWindowInstance = new Window();
+        private string _title;
+        #endregion
 
         #region Properties
         public List<DisplayContainer> AllViews
@@ -57,6 +62,17 @@ namespace WpfUI.ViewModels
                 NotifyOfPropertyChange();
             }
         }
+
+        public string Title
+        {
+            get { return _title; }
+            set 
+            { 
+                _title = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
         #endregion
 
         #region ICommandWindowsTaskbar
@@ -109,20 +125,50 @@ namespace WpfUI.ViewModels
             }
         }
 
+        public ICommand OpenLogDirectory
+        {
+            get
+            {
+                return new DelegateCommand
+                {
+                    CommandAction = () => OpenLogFolder()
+                };
+            }
+        }
+
         #endregion
 
         #region constructor
         public ShellViewModel()
         {
-            RegisterEvents();
             LoadViews();
             DisplayViews();
+            UpdateVersionNumber();
             ActivateItem(Primary.View);
         }
+        #endregion
 
-        void RegisterEvents()
+        #region events
+        protected override void OnViewReady(object view)
         {
-            
+            base.OnViewReady(view);
+            RegisterHotkeySetup();
+        }
+
+        protected override void OnViewLoaded(object view)
+        {
+            base.OnViewReady(view);
+
+            if (Application.Current.MainWindow != null)
+                Application.Current.MainWindow.Visibility = Visibility.Hidden;
+        }
+
+        protected override void OnDeactivate(bool close)
+        {
+            if (close)
+                UnregisterHotKey();
+
+            base.OnDeactivate(close);
         }
         #endregion
 
@@ -137,7 +183,7 @@ namespace WpfUI.ViewModels
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Logger.Log(ex.Message);
             }
         }
 
@@ -160,12 +206,24 @@ namespace WpfUI.ViewModels
             }
         }
 
-        protected override void OnViewLoaded(object view)
+        private void UpdateVersionNumber()
         {
-            base.OnViewReady(view);
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
+            Title = $"Outlook Clipboard v.{versionInfo.FileVersion}";
+        }
 
-            if (Application.Current.MainWindow != null)
-                Application.Current.MainWindow.Visibility = Visibility.Hidden;
+        private void OpenLogFolder()
+        {
+            try
+            {
+                Process.Start("explorer.exe", Logger.CalculateConfigPath());
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex.Message, "Error");
+            }
+            
         }
 
         void DisplayViews()
@@ -232,7 +290,7 @@ namespace WpfUI.ViewModels
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Logger.Log(ex.Message);
             }
         }
 
@@ -245,7 +303,7 @@ namespace WpfUI.ViewModels
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Logger.Log(ex.Message);
             }
         }
 
@@ -253,12 +311,13 @@ namespace WpfUI.ViewModels
         {
             try
             {
-                if (Tertiary.ToLoad)
-                    ActivateItem(Tertiary.View);
+                //if (Tertiary.ToLoad)
+                //    ActivateItem(Tertiary.View);
+                ActivateItem(_appConfig);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Logger.Log(ex.Message);
             }
         }
 
@@ -270,8 +329,73 @@ namespace WpfUI.ViewModels
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Logger.Log(ex.Message);
             }
+        }
+        #endregion
+
+        #region globalHotHotkeys
+        private const uint MOD_NONE = 0x0000; //[NONE]
+        private const uint MOD_ALT = 0x0001; //ALT
+        private const uint MOD_CONTROL = 0x0002; //CTRL
+        private const uint MOD_SHIFT = 0x0004; //SHIFT
+        private const uint MOD_WIN = 0x0008; //WINDOWS
+        private HwndSource _source;
+        private const int HOTKEY_ID = 9000;
+
+        [DllImport("User32.dll")]
+        private static extern bool RegisterHotKey([In] IntPtr hWnd,[In] int id,[In] uint fsModifiers,[In] uint vk);
+
+        [DllImport("User32.dll")]
+        private static extern bool UnregisterHotKey([In] IntPtr hWnd,[In] int id);
+
+        // called when hotkey is pressed
+        private IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            const int WM_HOTKEY = 0x0312;
+            switch (msg)
+            {
+                case WM_HOTKEY:
+                    switch (wParam.ToInt32())
+                    {
+                        case HOTKEY_ID:
+                            ShowAndHide();
+                            handled = true;
+                            break;
+                    }
+                    break;
+            }
+            return IntPtr.Zero;
+        }
+
+        void RegisterHotkeySetup()
+        {
+            if (Application.Current.MainWindow != null)
+            {
+                var helper = new WindowInteropHelper(Application.Current.MainWindow);
+                _source = HwndSource.FromHwnd(helper.Handle);
+                _source.AddHook(HwndHook);
+                RegisterHotKey();
+            }
+        }
+
+        private void RegisterHotKey()
+        {
+            var helper = new WindowInteropHelper(Application.Current.MainWindow);
+            const uint VK_F10 = 0x79;
+            const uint MOD_CTRL = 0x0002;
+
+            if (!RegisterHotKey(helper.Handle, HOTKEY_ID, MOD_CTRL, VK_F10))
+            {
+                Logger.Log("Warning unable to register hotkey");
+            }
+        }
+
+        private void UnregisterHotKey()
+        {
+            //var helper = new WindowInteropHelper(Application.Current.MainWindow);
+            //UnregisterHotKey(helper.Handle, HOTKEY_ID);
+            //Logger.Log("Unregistering hotkeys");
         }
         #endregion
     }

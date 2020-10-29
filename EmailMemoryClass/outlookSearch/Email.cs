@@ -422,7 +422,7 @@ namespace EmailMemoryClass
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Logger.Log("Error extract SR: " + ex.Message);
             }
 
             return extractedText;
@@ -445,7 +445,7 @@ namespace EmailMemoryClass
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error extracting info {ex.Message}");
+                Logger.Log($"Error extracting info {ex.Message}");
             }
 
             return builder.ToString();
@@ -494,7 +494,7 @@ namespace EmailMemoryClass
                     mailitem.VotingOptions = "Yes; No;";
                     break;
                 default:
-                    Console.WriteLine("No voting options selected");
+                    Logger.Log("No voting options selected");
                     break;
             }
 

@@ -10,11 +10,11 @@ none
 false
 TRACE
 C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\WpfUI\App.xaml
-6-2017959023
+6-2012835793
 
-171213019293
-1241948006989
-MainWindow.xaml;Views\AppConfigView.xaml;Views\EmailListView.xaml;Views\InitialStartupView.xaml;Views\ShellView.xaml;Views\UserConfigView.xaml;
+191200275232
+136572193581
+MainWindow.xaml;Views\AppConfigView.xaml;Views\ApplicationSettingsView.xaml;Views\EmailListView.xaml;Views\InitialStartupView.xaml;Views\ShellView.xaml;
 
 False
 

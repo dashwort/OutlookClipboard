@@ -60,7 +60,7 @@ namespace WpfUI.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    Logger.Log(ex.Message);
                 }
               
             }
@@ -78,7 +78,7 @@ namespace WpfUI.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    Logger.Log(ex.Message);
                 }
 
             }
@@ -185,7 +185,7 @@ namespace WpfUI.ViewModels
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Logger.Log(ex.Message);
             }
         }
 
@@ -199,7 +199,7 @@ namespace WpfUI.ViewModels
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Logger.Log(ex.Message);
             }
         }
 
@@ -213,7 +213,7 @@ namespace WpfUI.ViewModels
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Logger.Log(ex.Message);
             }
         }
 
@@ -225,7 +225,7 @@ namespace WpfUI.ViewModels
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Logger.Log(ex.Message);
             }
         }
 
@@ -243,7 +243,7 @@ namespace WpfUI.ViewModels
 
         public void RemoveItem()
         {
-            Console.WriteLine(SelectedEmail.SRNumber);
+            Logger.Log(SelectedEmail.SRNumber);
         }
 
         protected override void OnDeactivate(bool close)

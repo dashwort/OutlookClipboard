@@ -12,6 +12,7 @@ namespace WpfUI
     public class Bootstrapper : BootstrapperBase
     {
         private static AccountContainer _accounts;
+        private static OCUpdateManager _updateManager;
 
         public static AccountContainer AccountConfiguration
         {
@@ -19,9 +20,16 @@ namespace WpfUI
             set { _accounts = value; }
         }
 
+        public static OCUpdateManager UpdateManager
+        {
+            get { return _updateManager; }
+            set { _updateManager = value; }
+        }
+
         public Bootstrapper()
         {
             Bootstrapper.AccountConfiguration = new AccountContainer(true);
+            Bootstrapper.UpdateManager = new OCUpdateManager();
             Initialize();
         }
 

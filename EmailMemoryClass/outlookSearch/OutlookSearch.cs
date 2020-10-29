@@ -74,13 +74,17 @@ namespace EmailMemoryClass
             TimerInterval = config.TimerInterval;
             MaxDisplayItems = config.DisplayItems;
 
-            _timer = new System.Timers.Timer(TimerInterval * 1000) { AutoReset = true };
+            _timer = new Timer(TimerInterval * 1000) { AutoReset = true };
+            _timer.Start();
+
+            // register events
+
             _timer.Elapsed += TimerElapsed;
             OnFindErrorOccurred += SearchError;
             OnFindComplete += SearchComplete;
-            _timer.Start();
-
             OnServiceStart += OnStart;
+
+            // raise on start events
             OnServiceStart?.Invoke(this, EventArgs.Empty);
         }
 
@@ -109,13 +113,13 @@ namespace EmailMemoryClass
         #region events
         async void TimerElapsed(object sender, ElapsedEventArgs e)
         {
-            Console.WriteLine("calling asynchronous timer elapsed in outlook search." + "isSearchRunning: " + _isSearchRunning.ToString() + "isSearchPaused: " + _isSearchPaused.ToString());
+            Logger.Log("calling asynchronous timer elapsed in outlook search." + "isSearchRunning: " + _isSearchRunning.ToString() + "isSearchPaused: " + _isSearchPaused.ToString());
             await Task.Run(RunSearch);
         }
 
         async void OnStart(object sender, EventArgs e)
         {
-            Console.WriteLine("Calling OnOutlookStartup event");
+            Logger.Log("Calling OnOutlookStartup event");
             await Task.Run(RunSearch);
         }
 
@@ -132,7 +136,7 @@ namespace EmailMemoryClass
             }
             catch (Exception ex)
             {
-                Console.WriteLine();
+                Logger.Log("Outlook error occured: " + ex.Message);
             }
         }
 
@@ -170,7 +174,7 @@ namespace EmailMemoryClass
             var watch = new Stopwatch();
             watch.Start();
 
-            Console.WriteLine("Starting search for Email Account: " + EmailAddress);
+            Logger.Log("Starting search for Email Account: " + EmailAddress);
 
             // Duplicate list for comparing equity
             PreviousListFound = EmailsFound;
@@ -227,7 +231,7 @@ namespace EmailMemoryClass
             }
             catch (System.Exception ex)
             {
-                Console.WriteLine($"Error when running email search for account: {EmailAddress}\n Error: {ex.Message}");
+                Logger.Log($"Error when running email search for account: {EmailAddress}\n Error: {ex.Message}");
                 OnSearchErrorOccurred?.Invoke(this, EventArgs.Empty);
                 _firstRun = false;
             }
@@ -241,15 +245,15 @@ namespace EmailMemoryClass
                 if(!Compare() || _firstRun)
                 {
                     OnSearchComplete?.Invoke(this, EventArgs.Empty);
-                    Console.WriteLine("New Emails Detected, raising OnSearchComplete event");
+                    Logger.Log("New Emails Detected, raising OnSearchComplete event");
                 }
 
                 _firstRun = false;
             }
 
             watch.Stop();
-            Console.WriteLine("Search Took " + watch.ElapsedMilliseconds);
-            Console.WriteLine("Email Account Search: " + this.EmailAddress + " Emails Found: " + EmailsFound.Count);
+            Logger.Log("Search Took " + watch.ElapsedMilliseconds);
+            Logger.Log("Email Account Search: " + this.EmailAddress + " Emails Found: " + EmailsFound.Count);
         }
 
         public void FindEmail(Email email)
@@ -257,7 +261,7 @@ namespace EmailMemoryClass
             var watch = new Stopwatch();
             watch.Start();
 
-            Console.WriteLine("Searching for outlook mail item" + email.Subject);
+            Logger.Log("Searching for outlook mail item" + email.Subject);
 
             // create item for later disposing of com objects
             Outlook.MAPIFolder sentBox = null;
@@ -294,7 +298,7 @@ namespace EmailMemoryClass
                         {
                             if(mailItem.ConversationIndex == email.ConversationIndex)
                             {
-                                Console.WriteLine("Email Found. Subject: " + mailItem.Subject);
+                                Logger.Log("Email Found. Subject: " + mailItem.Subject);
                                 OnFindComplete?.Invoke(mailItem, EventArgs.Empty);
                                 break;
                             }
@@ -309,7 +313,7 @@ namespace EmailMemoryClass
             }
             catch (System.Exception ex)
             {
-                Console.WriteLine($"Error when running email search for account: {EmailAddress}\n Error: {ex.Message}");
+                Logger.Log($"Error when running email search for account: {EmailAddress}\n Error: {ex.Message}");
                 OnFindErrorOccurred?.Invoke(ex, EventArgs.Empty);
                 OnSearchErrorOccurred?.Invoke(this, EventArgs.Empty);
             }
@@ -321,7 +325,7 @@ namespace EmailMemoryClass
             }
 
             watch.Stop();
-            Console.WriteLine("Mail Item Search Took " + watch.ElapsedMilliseconds);
+            Logger.Log("Mail Item Search Took " + watch.ElapsedMilliseconds);
         }
 
         /// <summary>
@@ -348,7 +352,7 @@ namespace EmailMemoryClass
             }
             catch (System.Exception ex)
             {
-                Console.WriteLine($"Failed to return Outlook accounts\n Error: {ex}");
+                Logger.Log($"Failed to return Outlook accounts\n Error: {ex.Message}");
                 OnSearchErrorOccurred?.Invoke(this, EventArgs.Empty);
                 return null;
             }
@@ -372,7 +376,7 @@ namespace EmailMemoryClass
             catch (System.Exception ex)
             {
                 OnSearchErrorOccurred?.Invoke(this, EventArgs.Empty);
-                Console.WriteLine($"Failed to return Outlook accounts\n Error: {ex}");
+                Logger.Log($"Failed to return Outlook accounts\n Error: {ex.Message}");
             }
         }
 
@@ -390,15 +394,15 @@ namespace EmailMemoryClass
         {
             try
             {
-                //if (_olApp != null)
-                //    Marshal.ReleaseComObject(_olApp);
+                if (_olApp != null)
+                    Marshal.ReleaseComObject(_olApp);
 
-                //if (_olApp != null)
-                //    _olApp.Quit();
+                if (_olApp != null)
+                    _olApp.Quit();
             }
             catch (System.Exception ex)
             {
-                Console.WriteLine($"Failed to return Outlook accounts\n Error: {ex}");
+                Logger.Log($"Failed to return Outlook accounts\n Error: {ex}");
             }
         }
 
@@ -427,7 +431,7 @@ namespace EmailMemoryClass
             }
             catch (System.Exception ex)
             {
-                Console.WriteLine($"Failed to return Outlook accounts\n Error: {ex}");
+                Logger.Log($"Failed to return Outlook accounts\n Error: {ex}");
                 return null;
             }
             finally
@@ -454,7 +458,7 @@ namespace EmailMemoryClass
             }
             catch (System.Exception ex)
             {
-                Console.WriteLine("Failed to verify account: " + accountName);
+                Logger.Log("Failed to verify account: " + accountName);
             }
             finally
             {
@@ -463,7 +467,7 @@ namespace EmailMemoryClass
             }
 
             stopwatch.Stop();
-            Console.WriteLine("Account check took " + stopwatch.ElapsedMilliseconds + "ms");
+            Logger.Log("Account check took " + stopwatch.ElapsedMilliseconds + "ms");
             return success;
         }
 
@@ -510,7 +514,6 @@ namespace EmailMemoryClass
             bool timeEquity = string.Equals(x.TimeSent, y.TimeSent);
             bool subjectEquity = string.Equals(x.Subject, x.Subject);
             bool conversationIndex = string.Equals(x.ConversationIndex, y.ConversationIndex);
-
             return timeEquity && subjectEquity && conversationIndex;
         }
 

@@ -1,6 +1,6 @@
 C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\EmailMemoryClass\bin\Release\EmailMemoryClass.dll
 C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\EmailMemoryClass\bin\Release\EmailMemoryClass.pdb
-C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\EmailMemoryClass\obj\Release\EmailMemoryClass.csprojAssemblyReference.cache
 C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\EmailMemoryClass\obj\Release\EmailMemoryClass.csproj.CoreCompileInputs.cache
 C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\EmailMemoryClass\obj\Release\EmailMemoryClass.dll
 C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\EmailMemoryClass\obj\Release\EmailMemoryClass.pdb
+C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\EmailMemoryClass\obj\Release\EmailMemoryClass.csprojAssemblyReference.cache

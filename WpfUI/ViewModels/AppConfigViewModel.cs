@@ -195,7 +195,7 @@ namespace WpfUI.ViewModels
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error {ex.Message}");
+                Logger.Log($"Error {ex.Message}");
             }
         }
 

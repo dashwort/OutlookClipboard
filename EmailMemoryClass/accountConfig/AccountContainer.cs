@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Xml.Serialization;
 
 namespace EmailMemoryClass
@@ -11,6 +12,8 @@ namespace EmailMemoryClass
     public class AccountContainer
     {
         private string _settingsFile;
+        readonly System.Timers.Timer _servicesTimer;
+        private List<AccountConfig> accounts;
 
         public string SettingsFile
         {
@@ -35,10 +38,18 @@ namespace EmailMemoryClass
                 {
                     Accounts = new List<AccountConfig>();
                 }
+
+                _servicesTimer = new Timer(10000) { AutoReset = true };
+                _servicesTimer.Start();
+                _servicesTimer.Elapsed += ServicesTimerElapsed;
             }
         }
 
-        private List<AccountConfig> accounts;
+        async void ServicesTimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            Logger.Log("Calling asynchronous services timer");
+            await Logger.CheckForEntriesAsync();
+        }
 
         public List<AccountConfig> Accounts
         {
