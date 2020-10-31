@@ -31,10 +31,10 @@ Release/
 Releases/
 Res/
 
-EmailMemoryClass/bin
-WpfUI/bin
-EmailMemoryClass/obj
-WpfUI/obj
+EmailMemoryClass/bin/
+WpfUI/bin/
+EmailMemoryClass/obj/
+WpfUI/obj/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
