@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:WpfUI.Views"
         mc:Ignorable="d"
         Title="Configuration Wizard" 
-        Height="290" Width="570" Background="#36507e" ResizeMode="NoResize">
+        Height="360" Width="570" Background="#36507e" ResizeMode="NoResize">
 
     <Grid>
 
@@ -36,6 +36,16 @@
                 <Setter Property="HorizontalAlignment" Value="Left"/>
                 <Setter Property="VerticalAlignment" Value="Center"/>
                 <Setter Property="FontSize" Value="15"/>
+            </Style>
+
+            <Style TargetType="{x:Type CheckBox}">
+                <Setter Property="Background" Value="#36507e" />
+                <Setter Property="Foreground" Value="#f1f7fa" />
+                <Setter Property="Padding" Value="10,10,10,10"/>
+                <Setter Property="Margin" Value="10"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
             </Style>
         </Grid.Resources>
 
@@ -172,7 +182,13 @@
             Orientation="Vertical"
             Grid.ColumnSpan="1"
             Grid.Row="5"
-            Grid.Column="1">
+            Grid.Column="1"
+            Margin="10">
+            <CheckBox
+                Content="Run at startup"
+                IsChecked="{Binding RunAtStartup}"
+                FontSize="16">
+            </CheckBox>
             <Label Content="Search Tag:"
                    FontSize="16"
                    Height="28"
@@ -185,16 +201,19 @@
                      Margin="10,0,0,0"
                      Padding="0">
             </TextBox>
-
-
         </StackPanel>
+        
+        
+        
         
         <StackPanel
             Orientation="Horizontal"
             HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
             Grid.Row="5"
             Grid.Column="2"
-            Grid.ColumnSpan="1">
+            Grid.ColumnSpan="1"
+            >
             <Button x:Name="Save" 
                     Content="Save"
                     Margin="5"

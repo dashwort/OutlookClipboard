@@ -22,9 +22,9 @@ namespace EmailMemoryClass
         {
             if(!IsConfigured)
             {
-                SearchSize = 250;
+                SearchSize = 1000;
                 DisplayItems = 6;
-                TimerInterval = 60;
+                TimerInterval = 30;
                 DisplayIndex = 1;
                 SearchTag = "Enter a search tag";
                 EmailAddress = "example@exampledomain.com";

@@ -17,7 +17,7 @@ namespace EmailMemoryClass
         public EventHandler OnStart;
         public bool _isUpdateRunning = false;
         public string type;
-        public string repoUrl = "https://github.com/dashwort/OutlookClipboard";
+        public static string repoUrl = "https://github.com/dashwort/OutlookClipboard";
 
         public OCUpdateManager()
         {
@@ -33,8 +33,6 @@ namespace EmailMemoryClass
         async void OnManagerStart(object sender, EventArgs e)
         {
             Logger.Log("Calling update manager on start event");
-
-            await Task.Run(() => HandleEvents());
 
             await CheckForUpdatesGithub();
         }
@@ -98,21 +96,19 @@ namespace EmailMemoryClass
             }
         }
 
-        public void HandleEvents()
+        public static void RunAtStartup()
         {
             using (var mgr = new UpdateManager(repoUrl))
             {
-                SquirrelAwareApp.HandleEvents(
-                    onInitialInstall: v =>
-                    {
-                        mgr.CreateShortcutForThisExe();
-                        mgr.CreateRunAtWindowsStartupRegistry();
-                    },
-                    onAppUninstall: v =>
-                    {
-                        mgr.RemoveShortcutForThisExe();
-                        mgr.RemoveRunAtWindowsStartupRegistry();
-                    });
+                mgr.CreateRunAtWindowsStartupRegistry();
+            }
+        }
+
+        public static void RemoveAtStartup()
+        {
+            using (var mgr = new UpdateManager(repoUrl))
+            {
+                mgr.RemoveRunAtWindowsStartupRegistry();
             }
         }
     }

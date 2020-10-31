@@ -3,7 +3,6 @@ C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_Histor
 C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\EmailMemoryClass\obj\Release\EmailMemoryClass.csproj.CoreCompileInputs.cache
 C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\EmailMemoryClass\obj\Release\EmailMemoryClass.dll
 C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\EmailMemoryClass\obj\Release\EmailMemoryClass.pdb
-C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\EmailMemoryClass\obj\Release\EmailMemoryClass.csprojAssemblyReference.cache
 C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\EmailMemoryClass\bin\Release\EmailMemoryClass.dll.config
 C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\EmailMemoryClass\bin\Release\DeltaCompressionDotNet.dll
 C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\EmailMemoryClass\bin\Release\DeltaCompressionDotNet.MsDelta.dll
@@ -24,3 +23,4 @@ C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_Histor
 C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\EmailMemoryClass\bin\Release\Splat.pdb
 C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\EmailMemoryClass\bin\Release\Squirrel.pdb
 C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\EmailMemoryClass\obj\Release\EmailMemoryClass.csproj.CopyComplete
+C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\EmailMemoryClass\obj\Release\EmailMemoryClass.csprojAssemblyReference.cache

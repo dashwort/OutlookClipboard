@@ -15,18 +15,11 @@ namespace WpfUI.ViewModels
         private bool _complete;
         private System.Timers.Timer _statusTimer;
         private string _searchTag;
+        private bool _runAtStartup;
 
 
         private bool _canAdd;
-        public bool CanAdd
-        {
-            get { return _canAdd; }
-            set 
-            { 
-                _canAdd = value;
-                NotifyOfPropertyChange();
-            }
-        }
+
 
         private string _account1;
         private string _account2;
@@ -130,6 +123,26 @@ namespace WpfUI.ViewModels
             set { _complete = value; }
         }
 
+        public bool RunAtStartup
+        {
+            get { return _runAtStartup; }
+            set 
+            { 
+                _runAtStartup = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        public bool CanAdd
+        {
+            get { return _canAdd; }
+            set
+            {
+                _canAdd = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
         public string SearchTag
         {
             get { return _searchTag; }
@@ -231,6 +244,12 @@ namespace WpfUI.ViewModels
                 };
 
                 Bootstrapper.AccountConfiguration.Accounts.Add(accountConfig);
+            }
+
+            if(RunAtStartup)
+            {
+                Logger.Log("Adding run at startup shortcut", "Verbose");
+                OCUpdateManager.RunAtStartup();
             }
 
             Bootstrapper.AccountConfiguration.SaveChanges();
