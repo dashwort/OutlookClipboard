@@ -47,7 +47,7 @@ namespace EmailMemoryClass
 
         async void ServicesTimerElapsed(object sender, ElapsedEventArgs e)
         {
-            Logger.Log("Calling asynchronous services timer");
+            Logger.Log("Calling asynchronous services timer", "Verbose");
             await Logger.CheckForEntriesAsync();
         }
 

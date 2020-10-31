@@ -1,14 +1,15 @@
-﻿using EmailMemoryClass;
+﻿using Microsoft.Win32;
 using Squirrel;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
 
-namespace WpfUI
+namespace EmailMemoryClass
 {
     public class OCUpdateManager
     {
@@ -16,6 +17,7 @@ namespace WpfUI
         public EventHandler OnStart;
         public bool _isUpdateRunning = false;
         public string type;
+        public string repoUrl = "https://github.com/dashwort/OutlookClipboard";
 
         public OCUpdateManager()
         {
@@ -32,6 +34,8 @@ namespace WpfUI
         {
             Logger.Log("Calling update manager on start event");
 
+            await Task.Run(() => HandleEvents());
+
             await CheckForUpdatesGithub();
         }
 
@@ -43,13 +47,14 @@ namespace WpfUI
 
         public async Task CheckForUpdatesGithub()
         {
-            string repoUrl = "https://github.com/dashwort/OutlookClipboard";
+            
             _isUpdateRunning = true;
 
             using (var mgr = UpdateManager.GitHubUpdateManager(repoUrl))
             {
                 try
                 {
+
                     var updateInfo = await mgr.Result.CheckForUpdate();
 
                     if (updateInfo.ReleasesToApply.Any())
@@ -91,6 +96,47 @@ namespace WpfUI
                     _isUpdateRunning = false;
                 }
             }
+        }
+
+        public void HandleEvents()
+        {
+            using (var mgr = new UpdateManager(repoUrl))
+            {
+                SquirrelAwareApp.HandleEvents(
+                    onInitialInstall: v =>
+                    {
+                        mgr.CreateShortcutForThisExe();
+                        mgr.CreateRunAtWindowsStartupRegistry();
+                    },
+                    onAppUninstall: v =>
+                    {
+                        mgr.RemoveShortcutForThisExe();
+                        mgr.RemoveRunAtWindowsStartupRegistry();
+                    });
+            }
+        }
+    }
+
+    public static class UpdateManagerExtensions
+    {
+        private static RegistryKey OpenRunAtWindowsStartupRegistryKey() =>
+            Registry.CurrentUser.OpenSubKey(
+                "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+
+        public static void CreateRunAtWindowsStartupRegistry(this UpdateManager updateManager)
+        {
+            Logger.Log("Creating startup shortcut", "Verbose");
+            using (var startupRegistryKey = OpenRunAtWindowsStartupRegistryKey())
+                startupRegistryKey.SetValue(
+                    updateManager.ApplicationName,
+                    Path.Combine(updateManager.RootAppDirectory, $"{updateManager.ApplicationName}.exe"));
+        }
+
+        public static void RemoveRunAtWindowsStartupRegistry(this UpdateManager updateManager)
+        {
+            Logger.Log("Removing startup shortcut", "Verbose");
+            using (var startupRegistryKey = OpenRunAtWindowsStartupRegistryKey())
+                startupRegistryKey.DeleteValue(updateManager.ApplicationName);
         }
     }
 }

@@ -11,6 +11,7 @@ namespace WpfUI.ViewModels
 {
     public class EmailListViewModel : Screen
     {
+        #region fields
         private BindableCollection<Email> _mailItems = new BindableCollection<Email>();
         private Email _selectedEmail;
         private OutlookSearch _account;
@@ -21,7 +22,10 @@ namespace WpfUI.ViewModels
         private string _copyIcon;
         private string _pauseIcon;
         SolidColorBrush _statusColour;
+        private string _timeRemaining;
+        #endregion
 
+        #region properties
         public BindableCollection<Email> MailItems
         {
             get { return _mailItems; }
@@ -84,7 +88,6 @@ namespace WpfUI.ViewModels
             }
         }
 
-
         public string ConfigIcon
         {
             get { return _configIcon; }
@@ -121,6 +124,18 @@ namespace WpfUI.ViewModels
             set { _displayIndex = value; }
         }
 
+        public string TimeRemaining
+        {
+            get { return _timeRemaining; }
+            set 
+            { 
+                _timeRemaining = value;
+                NotifyOfPropertyChange();
+            }
+        }
+        #endregion
+
+
         public EmailListViewModel(AccountConfig account)
         {
             if(account != null)
@@ -140,6 +155,11 @@ namespace WpfUI.ViewModels
             }
         }
 
+        #region Events
+        public void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            CopyLastFwdBody();
+        }
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             OutlookErrorOccurred(this, e);
@@ -148,33 +168,44 @@ namespace WpfUI.ViewModels
         private void UITimerElapsed(object sender, ElapsedEventArgs e)
         {
             UpdateStatus();
+            UpdateTimer();
         }
 
-        private void UpdateStatus()
+        private void UpdateTimer()
         {
-            if (_account.HasError)
+            try
             {
-                Status = "Error occured, attempting recovery...";
-                StatusColour = Brushes.Red;
-            } else if (_account.HasFirstRunComplete)
+                var timeRemaining = Math.Round(_account._timer.TimeLeft/1000).ToString();
+                TimeRemaining = $"Time Remaining: {timeRemaining}";
+            }
+            catch (Exception ex)
             {
-                Status = "Loading..... Please wait";
-                StatusColour = Brushes.Black;
-            } else if (_account._isSearchRunning)
+                Logger.Log("Failed to update UI timer","Error");
+            }
+            
+        }
+
+        private void EmailSearchComplete(object sender, EventArgs e)
+        {
+            if (Account.EmailsFound.Count != 0)
             {
-                Status = "Searching... Please wait";
-                StatusColour = Brushes.Black;
-            } else
+                MailItems.Clear();
+                MailItems.AddRange(Account.EmailsFound);
+            }
+            else
             {
-                Status = string.Empty;
+                MailItems.Add(new Email() { Subject = "No emails detected - review settings" });
             }
         }
 
-        public void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void OutlookErrorOccurred(object sender, EventArgs e)
         {
-            CopyLastFwdBody();
+            _account.OutlookErrorOccurred(sender);
         }
 
+        #endregion
+
+        #region methods
         public void CopySR()
         {
             try
@@ -229,15 +260,26 @@ namespace WpfUI.ViewModels
             }
         }
 
-        private void EmailSearchComplete(object sender, EventArgs e)
+        private void UpdateStatus()
         {
-            if(Account.EmailsFound.Count != 0)
+            if (_account.HasError)
             {
-                MailItems.Clear();
-                MailItems.AddRange(Account.EmailsFound);
-            } else
+                Status = "Error occured, attempting recovery...";
+                StatusColour = Brushes.Red;
+            }
+            else if (_account.HasFirstRunComplete)
             {
-                MailItems.Add(new Email() { Subject="No emails detected - review settings" } );
+                Status = "Loading..... Please wait";
+                StatusColour = Brushes.Black;
+            }
+            else if (_account._isSearchRunning)
+            {
+                Status = "Searching... Please wait";
+                StatusColour = Brushes.Black;
+            }
+            else
+            {
+                Status = string.Empty;
             }
         }
 
@@ -252,12 +294,6 @@ namespace WpfUI.ViewModels
 
             base.OnDeactivate(close);
         }
-
-
-
-        private void OutlookErrorOccurred(object sender, EventArgs e)
-        {
-            _account.OutlookErrorOccurred();
-        }
+        #endregion
     }
 }

@@ -159,8 +159,8 @@ namespace WpfUI.ViewModels
         {
             base.OnViewReady(view);
 
-            if (Application.Current.MainWindow != null)
-                Application.Current.MainWindow.Visibility = Visibility.Hidden;
+            //if (Application.Current.MainWindow != null)
+            //    Application.Current.MainWindow.Visibility = Visibility.Hidden;
         }
 
         protected override void OnDeactivate(bool close)
@@ -311,9 +311,8 @@ namespace WpfUI.ViewModels
         {
             try
             {
-                //if (Tertiary.ToLoad)
-                //    ActivateItem(Tertiary.View);
-                ActivateItem(_appConfig);
+                if (Tertiary.ToLoad)
+                    ActivateItem(Tertiary.View);
             }
             catch (Exception ex)
             {

@@ -164,6 +164,28 @@
             </Button>
         </StackPanel>
 
+        <Label Content="{Binding TimeRemaining}"
+               Foreground="{Binding StatusColour}"
+               HorizontalAlignment="Left" 
+               Grid.Column="1" Grid.Row="5"
+               Grid.ColumnSpan="1"
+               FontWeight="Light"
+               FontSize="10"
+               Padding="0" 
+               Width="auto" 
+               VerticalAlignment="Center">
+        </Label>
+        <Label Content="{Binding Account.EmailAddress}"
+               Foreground="{Binding StatusColour}"
+               HorizontalAlignment="Center" 
+               Grid.Column="1" Grid.Row="5"
+               Grid.ColumnSpan="1"
+               FontWeight="Light"
+               FontSize="10"
+               Padding="0" 
+               Width="auto" 
+               VerticalAlignment="Center">
+        </Label>
         <Label Content="{Binding Status}"
                Foreground="{Binding StatusColour}"
                HorizontalAlignment="Right" 
