@@ -36,7 +36,7 @@ namespace EmailMemoryClass
         {
             var appdata = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
             var currentuser = Environment.UserName;
-            return $"{appdata}\\EmailMemory\\{currentuser}";
+            return $"{appdata}\\OutlookClipboard\\{currentuser}";
         }
 
         public static void Log(string input, string type = "Info")

@@ -47,7 +47,6 @@ namespace EmailMemoryClass
 
         async void ServicesTimerElapsed(object sender, ElapsedEventArgs e)
         {
-            Logger.Log("Calling asynchronous services timer", "Verbose");
             await Logger.CheckForEntriesAsync();
         }
 
@@ -68,15 +67,19 @@ namespace EmailMemoryClass
         {
             var appdata = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
             var currentuser = Environment.UserName;
-            return  $"{appdata}\\EmailMemory\\{currentuser}\\app.config";
+            return  $"{appdata}\\OutlookClipboard\\{currentuser}\\app.config";
         }
 
         void CheckFile()
         {
             var parent = Directory.GetParent(SettingsFile);
+            Logger.Log("Configuration Directory: " + parent.FullName);
 
             if (!parent.Exists)
+            {
                 Directory.CreateDirectory(parent.FullName);
+                Logger.Log("Configuration directory does not exist");
+            }
 
             if (!File.Exists(SettingsFile))
                 SaveToXml(SettingsFile);
@@ -84,7 +87,7 @@ namespace EmailMemoryClass
 
         AccountContainer ConstructFromXml(string FileName)
         {
-            Console.WriteLine("Loading from file " + FileName);
+            Logger.Log("Loading from file " + FileName);
             using (var stream = System.IO.File.OpenRead(FileName))
             {
                 var serializer = new XmlSerializer(typeof(AccountContainer));
@@ -94,7 +97,7 @@ namespace EmailMemoryClass
 
         void SaveToXml(string FileName)
         {
-            Console.WriteLine("Saving to file " + FileName);
+            Logger.Log("Saving to file " + FileName);
             using (var writer = new System.IO.StreamWriter(FileName))
             {
                 var serializer = new XmlSerializer(this.GetType());
@@ -143,7 +146,7 @@ namespace EmailMemoryClass
             }
             catch (Exception)
             {
-                Console.WriteLine("Failed to save file... retrying");
+                Logger.Log("Failed to save file... retrying", "Error");
                 success = false;
             }
 

@@ -224,9 +224,12 @@ namespace WpfUI.ViewModels
         {
             try
             {
-                Clipboard.SetText(SelectedEmail.LastMailAsFwd);
-                Status = "Copied last email to clipboard";
-                StatusColour = Brushes.Green;
+                if(SelectedEmail != null)
+                {
+                    Clipboard.SetText(SelectedEmail.LastMailAsFwd);
+                    Status = "Copied last email to clipboard";
+                    StatusColour = Brushes.Green;
+                }
             }
             catch (Exception ex)
             {
@@ -238,9 +241,12 @@ namespace WpfUI.ViewModels
         {
             try
             {
-                Clipboard.SetText(SelectedEmail.BodyText);
-                Status = "Copied full trail to clipboard";
-                StatusColour = Brushes.Green;
+                if (SelectedEmail != null)
+                {
+                    Clipboard.SetText(SelectedEmail.BodyText);
+                    Status = "Copied full trail to clipboard";
+                    StatusColour = Brushes.Green;
+                }
             }
             catch (Exception ex)
             {
@@ -252,7 +258,10 @@ namespace WpfUI.ViewModels
         {
             try
             {
-                await Task.Run(() => Account.FindEmail(SelectedEmail) );
+                if (SelectedEmail != null)
+                {
+                    await Task.Run(() => Account.FindEmail(SelectedEmail));
+                }
             }
             catch (Exception ex)
             {
@@ -280,12 +289,14 @@ namespace WpfUI.ViewModels
             else
             {
                 Status = string.Empty;
+                StatusColour = Brushes.Black;
             }
         }
 
-        public void RemoveItem()
+        public void Minimise()
         {
-            Logger.Log(SelectedEmail.SRNumber);
+            if (Application.Current.MainWindow != null)
+                Application.Current.MainWindow.Hide();
         }
 
         protected override void OnDeactivate(bool close)

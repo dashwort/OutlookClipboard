@@ -136,6 +136,27 @@ namespace WpfUI.ViewModels
             }
         }
 
+        public ICommand RestartApplication
+        {
+            get
+            {
+                return new DelegateCommand
+                {
+                    CommandAction = () => System.Windows.Forms.Application.Restart()
+                };
+            }
+        }
+
+        public ICommand OpenInstallDirectory
+        {
+            get
+            {
+                return new DelegateCommand
+                {
+                    CommandAction = () => OpenInstallLocation()
+                };
+            }
+        }
         #endregion
 
         #region constructor
@@ -159,8 +180,8 @@ namespace WpfUI.ViewModels
         {
             base.OnViewReady(view);
 
-            //if (Application.Current.MainWindow != null)
-            //    Application.Current.MainWindow.Visibility = Visibility.Hidden;
+            if (Application.Current.MainWindow != null)
+                Application.Current.MainWindow.Visibility = Visibility.Hidden;
         }
 
         protected override void OnDeactivate(bool close)
@@ -224,6 +245,19 @@ namespace WpfUI.ViewModels
                 Logger.Log(ex.Message, "Error");
             }
             
+        }
+
+        private void OpenInstallLocation()
+        {
+            try
+            {
+                Process.Start("explorer.exe", AppDomain.CurrentDomain.BaseDirectory);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex.Message, "Error");
+            }
+
         }
 
         void DisplayViews()

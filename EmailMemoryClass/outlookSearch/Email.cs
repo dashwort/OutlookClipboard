@@ -100,7 +100,7 @@ namespace EmailMemoryClass
 
         public string Icon
         {
-            get { return @"C:\temp\email-icon.png"; }
+            get { return $"{AppDomain.CurrentDomain.BaseDirectory}\\icons\\email_icon.png"; }
         }
 
         public string LastMailAsFwd

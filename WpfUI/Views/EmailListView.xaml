@@ -95,7 +95,7 @@
                             </Grid.RowDefinitions>
 
                             <!--ListViewItems contents here -->
-                            <Image Source="{Binding Icon}" 
+                            <Image Source="../icons/email_icon.png" 
                                    Grid.RowSpan="4" 
                                    VerticalAlignment="Center"
                                    Margin="5">
@@ -149,17 +149,28 @@
                     <Setter Property="ClickMode" Value="Press"/>
                 </Style>
             </StackPanel.Resources>
-                        
-            <Button cal:Message.Attach="Copy"
+            <Button cal:Message.Attach="Minimise"
+                    ToolTip="close to system tray">
+                <StackPanel>
+                    <Image Source="../icons/minimise.png" />
+                </StackPanel>
+            </Button>            
+            <Button cal:Message.Attach="CopyLastFwdBody"
                     ToolTip="copy last email to clipboard">
                 <StackPanel>
                     <Image Source="../icons/copy.png" />
                 </StackPanel>    
             </Button>
-            <Button cal:Message.Attach="CopyAll"
+            <Button cal:Message.Attach="CopyFullBody"
                     ToolTip="copy full email trail to clipboard">
                 <StackPanel>
                     <Image Source="../icons/copy_all.png" />
+                </StackPanel>
+            </Button>
+            <Button cal:Message.Attach="OpenInOutlook"
+                    ToolTip="open email in outlook">
+                <StackPanel>
+                    <Image Source="../icons/open.png" />
                 </StackPanel>
             </Button>
         </StackPanel>

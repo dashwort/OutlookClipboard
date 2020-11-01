@@ -52,6 +52,10 @@
                 <Setter Property="FontSize" Value="11"/>
             </Style>
 
+            <Style TargetType="{x:Type MenuItem}">
+                <Setter Property="Background" Value="#f1f7fa"/>
+                <Setter Property="Foreground" Value="#FF3F3F46"/>
+            </Style>
 
         </Grid.Resources>
 
@@ -63,17 +67,22 @@
             LeftClickCommand="{Binding LeftClickCommand}">
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu
-                    Background="#FF3F3F46"
-                    Foreground="#f1f7fa"
                     FontSize="11">
+                    <MenuItem
+                        Header="Configuration">
+                        <MenuItem Header="Open Log Directory"
+                               Command="{Binding OpenLogDirectory}"/>
+                        <MenuItem Header="Open Installation Directory"
+                               Command="{Binding OpenInstallDirectory}"/>
+                    </MenuItem>
                     <MenuItem Header="Open Window"
                               Command="{Binding DoubleClickCommand}"/>
                     <MenuItem Header="Reset Window"
                               Command="{Binding ResetPosition}"/>
+                    <MenuItem Header="Restart"
+                               Command="{Binding RestartApplication}"/>
                     <MenuItem Header="Exit"
                                Command="{Binding ExitApplication}"/>
-                    <MenuItem Header="Open Log Directory"
-                               Command="{Binding OpenLogDirectory}"/>
                 </ContextMenu>
             </tb:TaskbarIcon.ContextMenu>
         </tb:TaskbarIcon>
@@ -93,19 +102,19 @@
             Grid.ColumnSpan="5">
 
             <Button x:Name="LoadView" 
-                ClickMode="Press" 
+                ClickMode="Hover" 
                 DataContext="{Binding Primary}"
                 Content="{Binding DisplayNameView}"
                 IsEnabled="{Binding ToLoad}">
             </Button>
             <Button x:Name="LoadView2" 
-                ClickMode="Press" 
+                ClickMode="Hover" 
                 DataContext="{Binding Secondary}"
                 Content="{Binding DisplayNameView}"
                 IsEnabled="{Binding ToLoad}">
             </Button>
             <Button x:Name="LoadView3" 
-                ClickMode="Press" 
+                ClickMode="Hover" 
                 DataContext="{Binding Tertiary}"
                 Content="{Binding DisplayNameView}"
                 IsEnabled="{Binding ToLoad}">

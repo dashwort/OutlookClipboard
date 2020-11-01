@@ -52,7 +52,7 @@ namespace olc_ui {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/olc_ui;component/app.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/Outlook_Clipboard;component/app.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\App.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

@@ -124,7 +124,7 @@ namespace WpfUI.Views {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/olc_ui;component/views/initialstartupview.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/Outlook_Clipboard;component/views/initialstartupview.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\Views\InitialStartupView.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

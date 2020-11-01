@@ -4,13 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows;
+using System.Windows.Forms;
 using System.Windows.Media;
 using Caliburn.Micro;
 using EmailMemoryClass;
 
 namespace WpfUI.ViewModels
 {
-    public class InitialStartupViewModel : Screen, IDisposable
+    public class InitialStartupViewModel : ViewAware, IDisposable
     {
         private bool _complete;
         private System.Timers.Timer _statusTimer;
@@ -164,6 +166,11 @@ namespace WpfUI.ViewModels
             CanSave();
         }
 
+        public void Cancel()
+        {
+            System.Windows.Forms.Application.Exit();
+        }
+
         void SetColourStatus()
         {
             Account1Colour = GetColourAndStatus(Account1, Account1Displayname);
@@ -254,6 +261,10 @@ namespace WpfUI.ViewModels
 
             Bootstrapper.AccountConfiguration.SaveChanges();
             Complete = true;
+
+            System.Windows.Forms.MessageBox.Show("Configuration Updated. Please launch application from desktop shortcut.", "Configuration Saved", (MessageBoxButtons)MessageBoxButton.OK, MessageBoxIcon.Information);
+
+            ExecuteCancelCommand();
         }
 
         public void CanSave()
@@ -272,7 +283,13 @@ namespace WpfUI.ViewModels
             {
                 CanAdd = false;
             }
-                
+            
+            
+        }
+
+        public void ExecuteCancelCommand()
+        {
+            (GetView() as Window).Close();
         }
 
         public void Dispose()

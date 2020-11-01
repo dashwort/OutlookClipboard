@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
@@ -32,7 +31,7 @@ namespace EmailMemoryClass
 
         async void OnManagerStart(object sender, EventArgs e)
         {
-            Logger.Log("Calling update manager on start event");
+            Logger.Log("Calling update manager on start event", "Update");
 
             await CheckForUpdatesGithub();
         }
@@ -52,15 +51,14 @@ namespace EmailMemoryClass
             {
                 try
                 {
-
                     var updateInfo = await mgr.Result.CheckForUpdate();
 
                     if (updateInfo.ReleasesToApply.Any())
                     {
                         var versionCount = updateInfo.ReleasesToApply.Count;
-                        Logger.Log($"{versionCount} update(s) found.");
+                        Logger.Log($"{versionCount} update(s) found.", "Update");
 
-                        Logger.Log("Downloading updates");
+                        Logger.Log("Downloading updates", "Update");
                         var updateResult = await mgr.Result.UpdateApp();
 
                         var versionWord = versionCount > 1 ? "versions" : "version";
@@ -70,7 +68,7 @@ namespace EmailMemoryClass
                         var result = MessageBox.Show(message, "Application Update", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                         message = $"Download complete. Version {updateResult.Version} will take effect when App is restarted.";
-                        Logger.Log(message);
+                        Logger.Log(message, "Update");
                     }
                     else
                     {
@@ -79,7 +77,7 @@ namespace EmailMemoryClass
                             var UpdateResult = MessageBox.Show("No updates detected.", "Application Update", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
 
-                        Logger.Log($"No updates detected {DateTime.Now}");
+                        Logger.Log($"No updates detected {DateTime.Now}", "Update");
                     }
                 }
                 catch (Exception ex)
@@ -121,7 +119,7 @@ namespace EmailMemoryClass
 
         public static void CreateRunAtWindowsStartupRegistry(this UpdateManager updateManager)
         {
-            Logger.Log("Creating startup shortcut", "Verbose");
+            Logger.Log("Creating startup shortcut", "Update");
             using (var startupRegistryKey = OpenRunAtWindowsStartupRegistryKey())
                 startupRegistryKey.SetValue(
                     updateManager.ApplicationName,
@@ -130,7 +128,7 @@ namespace EmailMemoryClass
 
         public static void RemoveRunAtWindowsStartupRegistry(this UpdateManager updateManager)
         {
-            Logger.Log("Removing startup shortcut", "Verbose");
+            Logger.Log("Removing startup shortcut", "Update");
             using (var startupRegistryKey = OpenRunAtWindowsStartupRegistryKey())
                 startupRegistryKey.DeleteValue(updateManager.ApplicationName);
         }

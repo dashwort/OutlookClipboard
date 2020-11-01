@@ -141,18 +141,7 @@ namespace EmailMemoryClass
         public void OutlookErrorOccurred(object sender)
         {
             HasError = true;
-            ExitOutlook();
             _timer.Interval = 5000;
-
-            try
-            {
-                _olApp = new OutlookApp();
-                _firstRun = false;
-            }
-            catch (Exception ex)
-            {
-                Logger.Log("Outlook error occured: " + ex.Message, "Error");
-            }
         }
 
         void SearchComplete(object sender, EventArgs e)
@@ -199,13 +188,12 @@ namespace EmailMemoryClass
             Outlook.MAPIFolder sentBox = null;
             Outlook.Items olItems = null;
             Outlook.MailItem mailItem = null;
+            Outlook.MAPIFolder account = null;
 
             try
             {
-                if (_olApp == null)
-                    _olApp = new OutlookApp();
-
-                var account = GetAccount();
+                _olApp = new OutlookApp();
+                account = GetAccount();
 
                 if (account == null)
                     throw new ApplicationException("Failed to extract email account");
@@ -223,7 +211,7 @@ namespace EmailMemoryClass
                 {
                     mailItem = item as Outlook.MailItem;
 
-                    //mailItem.
+                    HasError = false;
 
                     if (mailItem != null)
                     {
@@ -256,15 +244,14 @@ namespace EmailMemoryClass
                 if (sentBox != null) Marshal.ReleaseComObject(sentBox);
                 if (olItems != null) Marshal.ReleaseComObject(olItems);
                 if (mailItem != null) Marshal.ReleaseComObject(mailItem);
-                _isSearchRunning = false;
+                if (account != null) Marshal.ReleaseComObject(account);
+                if (_olApp != null) Marshal.ReleaseComObject(_olApp);
 
-                if(!Compare() || _firstRun)
-                {
-                    OnSearchComplete?.Invoke(this, EventArgs.Empty);
-                    Logger.Log("New Emails Detected, raising OnSearchComplete event");
-                }
-
+                _isSearchRunning = false;  
                 _firstRun = false;
+
+                OnSearchComplete?.Invoke(this, EventArgs.Empty);
+                Logger.Log("New Emails Detected, raising OnSearchComplete event");
             }
 
             watch.Stop();
@@ -274,74 +261,77 @@ namespace EmailMemoryClass
 
         public void FindEmail(Email email)
         {
-            var watch = new Stopwatch();
-            watch.Start();
-
-            Logger.Log("Searching for outlook mail item" + email.Subject);
-
-            // create item for later disposing of com objects
-            Outlook.MAPIFolder sentBox = null;
-            Outlook.Items olItems = null;
-            Outlook.MailItem mailItem = null;
-
-            try
+            if(email != null)
             {
-                if (_olApp == null)
-                    _olApp = new OutlookApp();
+                var watch = new Stopwatch();
+                watch.Start();
 
-                var account = GetAccount();
+                Logger.Log("Searching for outlook mail item" + email.Subject);
 
-                if (account == null)
-                    throw new ApplicationException("Failed to extract email account");
+                // create item for later disposing of com objects
+                Outlook.MAPIFolder sentBox = null;
+                Outlook.Items olItems = null;
+                Outlook.MailItem mailItem = null;
+                Outlook.MAPIFolder account = null;
 
-                sentBox = account.Store.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderSentMail);
-                olItems = sentBox.Items;
-
-                // order items in Email DB by date sent
-                olItems.Sort("SentOn", true);
-
-                double Counter = 0;
-
-                foreach (var item in olItems)
+                try
                 {
-                    mailItem = item as Outlook.MailItem;
+                    _olApp = new OutlookApp();
+                    account = GetAccount();
 
-                    //mailItem.
+                    if (account == null)
+                        throw new ApplicationException("Failed to extract email account");
 
-                    if (mailItem != null)
+                    sentBox = account.Store.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderSentMail);
+                    olItems = sentBox.Items;
+
+                    // order items in Email DB by date sent
+                    olItems.Sort("SentOn", true);
+
+                    double Counter = 0;
+                    HasError = false;
+
+                    foreach (var item in olItems)
                     {
-                        if(mailItem.ConversationID == email.ConversationId)
+                        mailItem = item as Outlook.MailItem;
+
+                        if (mailItem != null)
                         {
-                            if(mailItem.ConversationIndex == email.ConversationIndex)
+                            if (mailItem.ConversationID == email.ConversationId)
                             {
-                                Logger.Log("Email Found. Subject: " + mailItem.Subject);
-                                OnFindComplete?.Invoke(mailItem, EventArgs.Empty);
-                                break;
+                                if (mailItem.ConversationIndex == email.ConversationIndex)
+                                {
+                                    Logger.Log("Email Found. Subject: " + mailItem.Subject);
+                                    OnFindComplete?.Invoke(mailItem, EventArgs.Empty);
+                                    break;
+                                }
                             }
                         }
+
+                        Counter++;
+
+                        if (Counter >= SearchSize)
+                            break;
                     }
-
-                    Counter++;
-
-                    if (Counter >= SearchSize)
-                        break;
                 }
-            }
-            catch (System.Exception ex)
-            {
-                Logger.Log($"Error when running email search for account: {EmailAddress}\n Error: {ex.Message}", "Error");
-                OnFindErrorOccurred?.Invoke(ex, EventArgs.Empty);
-                OnSearchErrorOccurred?.Invoke(ex, EventArgs.Empty);
-            }
-            finally
-            {
-                if (sentBox != null) Marshal.ReleaseComObject(sentBox);
-                if (olItems != null) Marshal.ReleaseComObject(olItems);
-                if (mailItem != null) Marshal.ReleaseComObject(mailItem);
-            }
+                catch (System.Exception ex)
+                {
+                    Logger.Log($"Error when running email search for account: {EmailAddress}\n Error: {ex.Message}", "Error");
+                    OnFindErrorOccurred?.Invoke(ex, EventArgs.Empty);
+                    OnSearchErrorOccurred?.Invoke(ex, EventArgs.Empty);
+                }
+                finally
+                {
+                    if (sentBox != null) Marshal.ReleaseComObject(sentBox);
+                    if (olItems != null) Marshal.ReleaseComObject(olItems);
+                    if (mailItem != null) Marshal.ReleaseComObject(mailItem);
+                    if (sentBox != null) Marshal.ReleaseComObject(sentBox);
+                    if (_olApp != null) Marshal.ReleaseComObject(_olApp);
+                }
 
-            watch.Stop();
-            Logger.Log("Mail Item Search Took " + watch.ElapsedMilliseconds);
+                watch.Stop();
+                Logger.Log("Mail Item Search Took " + watch.ElapsedMilliseconds);
+            }
         }
 
         /// <summary>
@@ -410,8 +400,7 @@ namespace EmailMemoryClass
         {
             try
             {
-                if (_olApp != null)
-                    Marshal.ReleaseComObject(_olApp);
+                //
             }
             catch (System.Exception ex)
             {
