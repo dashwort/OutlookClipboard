@@ -1,5 +1,5 @@
 ﻿using Caliburn.Micro;
-using EmailMemoryClass;
+using EmailMemoryClass.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;

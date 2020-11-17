@@ -7,56 +7,73 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Xml.Serialization;
 
-namespace EmailMemoryClass
+namespace EmailMemoryClass.Configuration
 {
-    public class AccountContainer
+    public class SettingsContainer
     {
-        private string _settingsFile;
-        readonly System.Timers.Timer _servicesTimer;
-        private List<AccountConfig> accounts;
+        #region fields
+        string _settingsFile;
+        Timer _servicesTimer;
+        List<AccountConfig> _accounts;
+        ApplicationConfiguration _appConfig;
+        #endregion
 
+        #region properties
         public string SettingsFile
         {
             get { return _settingsFile; }
             set { _settingsFile = value; }
         }
 
-        public AccountContainer()
+        public List<AccountConfig> Accounts
         {
-            
+            get { return _accounts; }
+            set { _accounts = value; }
         }
 
-        public AccountContainer(bool proceed)
+        public ApplicationConfiguration ApplicationConfig
+        {
+            get { return _appConfig; }
+            set { _appConfig = value; }
+        }
+        #endregion
+
+        public SettingsContainer()
+        {
+            //
+        }
+
+        public SettingsContainer(bool proceed)
         {
             if(proceed)
             {
                 SettingsFile = CalculateConfigPath();
                 CheckFile();
                 LoadFromFile();
+                StartTimer();
 
-                if(Accounts == null)
-                {
+                if (Accounts == null)
                     Accounts = new List<AccountConfig>();
-                }
 
-                _servicesTimer = new Timer(10000) { AutoReset = true };
-                _servicesTimer.Start();
-                _servicesTimer.Elapsed += ServicesTimerElapsed;
+                if (ApplicationConfig == null)
+                    ApplicationConfig = new ApplicationConfiguration();
             }
         }
 
+       
         async void ServicesTimerElapsed(object sender, ElapsedEventArgs e)
         {
             await Logger.CheckForEntriesAsync();
         }
 
-        public List<AccountConfig> Accounts
+        #region methods
+        void StartTimer()
         {
-            get { return accounts; }
-            set { accounts = value; }
+            _servicesTimer = new Timer(10000) { AutoReset = true };
+            _servicesTimer.Start();
+            _servicesTimer.Elapsed += ServicesTimerElapsed;
         }
 
-        #region methods
         void LoadFromFile()
         {
             var loadedConfig = ConstructFromXml(SettingsFile);
@@ -85,13 +102,13 @@ namespace EmailMemoryClass
                 SaveToXml(SettingsFile);
         }
 
-        AccountContainer ConstructFromXml(string FileName)
+        SettingsContainer ConstructFromXml(string FileName)
         {
             Logger.Log("Loading from file " + FileName);
             using (var stream = System.IO.File.OpenRead(FileName))
             {
-                var serializer = new XmlSerializer(typeof(AccountContainer));
-                return serializer.Deserialize(stream) as AccountContainer;
+                var serializer = new XmlSerializer(typeof(SettingsContainer));
+                return serializer.Deserialize(stream) as SettingsContainer;
             }
         }
 

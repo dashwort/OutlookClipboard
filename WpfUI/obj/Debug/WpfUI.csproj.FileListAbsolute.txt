@@ -48,3 +48,10 @@ C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_Histor
 C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\WpfUI\obj\Debug\Outlook_Clipboard.g.resources
 C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\WpfUI\obj\Debug\Outlook_Clipboard.exe
 C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\WpfUI\obj\Debug\Outlook_Clipboard.pdb
+C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\WpfUI\obj\Debug\Views\SearchResultView.g.cs
+C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\WpfUI\obj\Debug\Views\SearchResultView.baml
+C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\WpfUI\bin\Debug\System.Data.SQLite.dll
+C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\WpfUI\bin\Debug\Dapper.dll
+C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\WpfUI\bin\Debug\System.Data.SQLite.xml
+C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\WpfUI\bin\Debug\Dapper.xml
+C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\WpfUI\bin\Debug\SearchResults.db

@@ -39,6 +39,7 @@ namespace EmailMemoryClass
         private string conversationId;
 
         // metadata private fields
+        private bool _hasSRNumber;
         private string _srNumber;
         private string _lastMailAsFwd;
 
@@ -83,6 +84,15 @@ namespace EmailMemoryClass
             set
             {
                 _srNumber = value;
+            }
+        }
+
+        public bool HasSRNumber
+        {
+            get { return _hasSRNumber; }
+            set
+            {
+                _hasSRNumber = value;
             }
         }
 
@@ -402,7 +412,7 @@ namespace EmailMemoryClass
 
             try
             {
-                if (!string.IsNullOrEmpty(regex.Match(this.subject).Value))
+                if (!string.IsNullOrEmpty(this.subject))
                 {
                     var text = regex.Match(this.subject).Value;
 
@@ -411,19 +421,25 @@ namespace EmailMemoryClass
                 }
                 else
                 {
-                    if (!string.IsNullOrEmpty(regex.Match(this.body).Value))
+                    if (!string.IsNullOrEmpty(this.body))
                     {
                         var text = regex.Match(this.body).Value;
 
                         if (text.Trim().StartsWith("810") || text.Trim().StartsWith("600"))
                             extractedText = text;
+                    } else
+                    {
+                        //
                     }
                 }
             }
             catch (Exception ex)
             {
-                Logger.Log("Error extract SR: " + ex.Message);
+                Logger.Log($"Error extract SR: {ex.Message} {ex.InnerException} {ex.StackTrace}", "Error");
             }
+
+            if (extractedText != "No SR detected" && extractedText.StartsWith("810"))
+                HasSRNumber = true;
 
             return extractedText;
         }

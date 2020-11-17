@@ -1,0 +1,104 @@
+﻿<UserControl x:Class="WpfUI.Views.SearchResultView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WpfUI.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="475" d:DesignWidth="675"
+             Background="Aqua">
+    <Grid>
+        <!--Grid detail for control -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="10"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- List view style -->
+        <Grid.Resources>
+            <Style TargetType="ListViewItem">
+                <!-- Set tool tip to last fwd body -->
+                <Setter Property="ToolTip">
+                    <Setter.Value>
+                        <UniformGrid Columns="1">
+                            <TextBlock Text="{Binding Path=Body}"/>
+                        </UniformGrid>
+                    </Setter.Value>
+                </Setter>
+                <!-- Set item colour based on index, alternates between two colours -->
+                <Style.Triggers>
+                    <Trigger Property="ItemsControl.AlternationIndex"  Value="0">
+                        <Setter Property="Background" Value="White" />
+                    </Trigger>
+                    <Trigger Property="ItemsControl.AlternationIndex"  Value="1">
+                        <Setter Property="Background" Value="#f1f7fa" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style TargetType="{x:Type Button}">
+                <Setter Property="Background" Value="#f1f7fa" />
+                <Setter Property="Width" Value="80" />
+                <Setter Property="Margin" Value="10" />
+            </Style>
+        </Grid.Resources>
+
+        <ListView Grid.Column="1" 
+                  Grid.Row="4" Grid.ColumnSpan="1" 
+                  ItemsSource="{Binding Path=SearchItems}"
+                  AlternationCount="2"
+                  Background="#f1f7fa"
+                  SelectedItem="{Binding Path=SelectedSearch}"
+                  SelectionMode="Single">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderBrush="#CCCCCC" BorderThickness="1">
+                        <Grid>
+                            <!-- Column Definitions for Grid within list view-->
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50" ></ColumnDefinition>
+                                <ColumnDefinition Width="30" ></ColumnDefinition>
+                                <ColumnDefinition Width="40" ></ColumnDefinition>
+                                <ColumnDefinition Width="400" ></ColumnDefinition>
+                                <ColumnDefinition Width="110" ></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30"></RowDefinition>
+                            </Grid.RowDefinitions>
+
+                            <!--ListViewItems contents here -->
+                            <StackPanel Orientation="Horizontal"
+                                        Grid.Column="0"
+                                        Grid.Row="0"
+                                        Grid.ColumnSpan="4">
+                                <Label Content="{Binding SRNumber}" 
+                                   FontWeight="Bold" >
+                                </Label>
+                                <Label Content="{Binding Subject}" 
+                                   FontWeight="Light">
+                                </Label>
+                            </StackPanel>
+                            <Label Content="{Binding UKTime}" 
+                                   Grid.Row="0"
+                                   Grid.Column="4"
+                                   FontWeight="Light">
+                            </Label>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <!--End of list view -->
+
+    </Grid>
+</UserControl>

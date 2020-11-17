@@ -23,4 +23,15 @@ C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_Histor
 C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\EmailMemoryClass\bin\Debug\Mono.Cecil.Pdb.pdb
 C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\EmailMemoryClass\bin\Debug\Mono.Cecil.Rocks.pdb
 C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\EmailMemoryClass\bin\Debug\EmailMemoryClass.dll.config
+C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\EmailMemoryClass\bin\Debug\Dapper.dll
+C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\EmailMemoryClass\bin\Debug\System.Data.SQLite.dll
+C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\EmailMemoryClass\bin\Debug\Dapper.xml
+C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\EmailMemoryClass\bin\Debug\System.Data.SQLite.xml
+C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\EmailMemoryClass\bin\Debug\EntityFramework.dll
+C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\EmailMemoryClass\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\EmailMemoryClass\bin\Debug\System.Data.SQLite.EF6.dll
+C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\EmailMemoryClass\bin\Debug\System.Data.SQLite.Linq.dll
+C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\EmailMemoryClass\bin\Debug\EntityFramework.xml
+C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\EmailMemoryClass\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\EmailMemoryClass\bin\Debug\SearchResults.db
 C:\Users\dashwort\OneDrive - Agilent Technologies\CodingProjects\C#\Email_History\EmailUI\EmailMemoryClass\obj\Debug\EmailMemoryClass.csprojAssemblyReference.cache

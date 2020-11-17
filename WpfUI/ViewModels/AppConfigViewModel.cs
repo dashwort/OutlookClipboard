@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using EmailMemoryClass;
+using EmailMemoryClass.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -81,9 +82,9 @@ namespace WpfUI.ViewModels
 
         void LoadConfig()
         {
-            if(Bootstrapper.AccountConfiguration.Accounts.Count > 0)
+            if(Bootstrapper.ApplicationConfiguration.Accounts.Count > 0)
             {
-                Accounts.AddRange(Bootstrapper.AccountConfiguration.Accounts);
+                Accounts.AddRange(Bootstrapper.ApplicationConfiguration.Accounts);
             }
         }
 
@@ -100,19 +101,19 @@ namespace WpfUI.ViewModels
             {
                 // set backup in case of failure
                 AccountsBackup.Clear();
-                AccountsBackup.AddRange(Bootstrapper.AccountConfiguration.Accounts);
+                AccountsBackup.AddRange(Bootstrapper.ApplicationConfiguration.Accounts);
 
-                Bootstrapper.AccountConfiguration.Accounts.Clear();
+                Bootstrapper.ApplicationConfiguration.Accounts.Clear();
 
                 foreach (var entry in Accounts)
                 {
-                    Bootstrapper.AccountConfiguration.Accounts.Add(entry);
+                    Bootstrapper.ApplicationConfiguration.Accounts.Add(entry);
                 }
 
-                if (!Bootstrapper.AccountConfiguration.SaveChanges())
+                if (!Bootstrapper.ApplicationConfiguration.SaveChanges())
                 {
                     MessageBox.Show("Failed to save changes", "Configuration not saved", MessageBoxButton.OK, MessageBoxImage.Error);
-                    Bootstrapper.AccountConfiguration.Accounts.AddRange(AccountsBackup);
+                    Bootstrapper.ApplicationConfiguration.Accounts.AddRange(AccountsBackup);
                 } else
                 {
                     MessageBox.Show("Configuration Updated, restarting application to take effect", "Configuration Saved", MessageBoxButton.OK, MessageBoxImage.Information);

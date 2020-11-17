@@ -1,5 +1,7 @@
 ﻿using Caliburn.Micro;
 using EmailMemoryClass;
+using EmailMemoryClass.Configuration;
+using EmailMemoryClass.outlookSearch;
 using System;
 using System.Diagnostics;
 using System.Reflection;
@@ -11,13 +13,13 @@ namespace WpfUI
 {
     public class Bootstrapper : BootstrapperBase
     {
-        private static AccountContainer _accounts;
+        private static SettingsContainer _applicationConfiguration;
         private static OCUpdateManager _updateManager;
 
-        public static AccountContainer AccountConfiguration
+        public static SettingsContainer ApplicationConfiguration
         {
-            get { return _accounts; }
-            set { _accounts = value; }
+            get { return _applicationConfiguration; }
+            set { _applicationConfiguration = value; }
         }
 
         public static OCUpdateManager UpdateManager
@@ -28,7 +30,7 @@ namespace WpfUI
 
         public Bootstrapper()
         {
-            Bootstrapper.AccountConfiguration = new AccountContainer(true);
+            Bootstrapper.ApplicationConfiguration = new SettingsContainer(true);
             Bootstrapper.UpdateManager = new OCUpdateManager();
             Initialize();
         }

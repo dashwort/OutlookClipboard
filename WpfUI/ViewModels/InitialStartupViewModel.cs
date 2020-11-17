@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Windows.Media;
 using Caliburn.Micro;
 using EmailMemoryClass;
+using EmailMemoryClass.Configuration;
 
 namespace WpfUI.ViewModels
 {
@@ -222,7 +223,7 @@ namespace WpfUI.ViewModels
                     SearchTag = this.SearchTag
                 };
 
-                Bootstrapper.AccountConfiguration.Accounts.Add(accountConfig);
+                Bootstrapper.ApplicationConfiguration.Accounts.Add(accountConfig);
             }
 
             if (Account2Colour == Brushes.Green)
@@ -236,7 +237,7 @@ namespace WpfUI.ViewModels
                     SearchTag = this.SearchTag
                 };
 
-                Bootstrapper.AccountConfiguration.Accounts.Add(accountConfig);
+                Bootstrapper.ApplicationConfiguration.Accounts.Add(accountConfig);
             }
 
             if (Account3Colour == Brushes.Green)
@@ -250,7 +251,7 @@ namespace WpfUI.ViewModels
                     SearchTag = this.SearchTag
                 };
 
-                Bootstrapper.AccountConfiguration.Accounts.Add(accountConfig);
+                Bootstrapper.ApplicationConfiguration.Accounts.Add(accountConfig);
             }
 
             if(RunAtStartup)
@@ -259,7 +260,7 @@ namespace WpfUI.ViewModels
                 OCUpdateManager.RunAtStartup();
             }
 
-            Bootstrapper.AccountConfiguration.SaveChanges();
+            Bootstrapper.ApplicationConfiguration.SaveChanges();
             Complete = true;
 
             System.Windows.Forms.MessageBox.Show("Configuration Updated. Please launch application from desktop shortcut.", "Configuration Saved", (MessageBoxButtons)MessageBoxButton.OK, MessageBoxIcon.Information);

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EmailMemoryClass
+namespace EmailMemoryClass.Configuration
 {
     public class AccountConfig
     {

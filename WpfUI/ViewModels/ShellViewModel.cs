@@ -180,8 +180,11 @@ namespace WpfUI.ViewModels
         {
             base.OnViewReady(view);
 
-            if (Application.Current.MainWindow != null)
-                Application.Current.MainWindow.Visibility = Visibility.Hidden;
+            //if (Application.Current.MainWindow != null)
+            //    Application.Current.MainWindow.Visibility = Visibility.Hidden;
+
+            var view2 = new SearchResultViewModel();
+            ActivateItem(view2);
         }
 
         protected override void OnDeactivate(bool close)
@@ -217,12 +220,15 @@ namespace WpfUI.ViewModels
                     break;
                 case Visibility.Hidden:
                     Application.Current.MainWindow.Show();
+                    Application.Current.MainWindow.Activate();
                     break;
                 case Visibility.Collapsed:
                     Application.Current.MainWindow.Show();
+                    Application.Current.MainWindow.Activate();
                     break;
                 default:
                     Application.Current.MainWindow.Show();
+                    Application.Current.MainWindow.Activate();
                     break;
             }
         }
@@ -293,9 +299,9 @@ namespace WpfUI.ViewModels
             if(AllViews == null)
                 AllViews = new List<DisplayContainer>();
 
-            if(Bootstrapper.AccountConfiguration.Accounts.Count > 0)
+            if(Bootstrapper.ApplicationConfiguration.Accounts.Count > 0)
             {
-                foreach (var account in Bootstrapper.AccountConfiguration.Accounts)
+                foreach (var account in Bootstrapper.ApplicationConfiguration.Accounts)
                 {
                     AllViews.Add(new DisplayContainer(account));
                 }

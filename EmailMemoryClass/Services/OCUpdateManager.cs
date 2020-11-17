@@ -20,7 +20,7 @@ namespace EmailMemoryClass
 
         public OCUpdateManager()
         {
-            _timer = new System.Timers.Timer(60 * 1000) { AutoReset = true };
+            _timer = new System.Timers.Timer(360 * 1000) { AutoReset = true };
             _timer.Elapsed += TimerElapsed;
             _timer.Start();
             type = "auto";
@@ -31,20 +31,32 @@ namespace EmailMemoryClass
 
         async void OnManagerStart(object sender, EventArgs e)
         {
-            Logger.Log("Calling update manager on start event", "Update");
-
-            await CheckForUpdatesGithub();
+            try
+            {
+                Logger.Log("Calling update manager on start event", "Update");
+                await CheckForUpdatesGithub();
+            }
+            catch (Exception)
+            {
+                Logger.Log("Failed to build update object", "Error");
+            }
         }
 
         async void TimerElapsed(object sender, ElapsedEventArgs e)
         {
-            if (!_isUpdateRunning)
-                await Task.Run(CheckForUpdatesGithub);
+            try
+            {
+                if (!_isUpdateRunning)
+                    await Task.Run(CheckForUpdatesGithub);
+            }
+            catch (Exception)
+            {
+                Logger.Log("Failed to build update object", "Error");
+            }
         }
 
         public async Task CheckForUpdatesGithub()
         {
-            
             _isUpdateRunning = true;
 
             using (var mgr = UpdateManager.GitHubUpdateManager(repoUrl))

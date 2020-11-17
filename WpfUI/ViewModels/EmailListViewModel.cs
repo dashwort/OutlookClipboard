@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using EmailMemoryClass;
+using EmailMemoryClass.Configuration;
 using System;
 using System.Threading.Tasks;
 using System.Timers;
@@ -175,7 +176,7 @@ namespace WpfUI.ViewModels
         {
             try
             {
-                var timeRemaining = Math.Round(_account._timer.TimeLeft/1000).ToString();
+                var timeRemaining = Math.Round(_account._searchTimer.TimeLeft/1000).ToString();
                 TimeRemaining = $"Time Remaining: {timeRemaining}";
             }
             catch (Exception ex)

@@ -1,4 +1,6 @@
-﻿using EmailMemoryClass.Services;
+﻿using EmailMemoryClass.Configuration;
+using EmailMemoryClass.Services;
+using Microsoft.Office.Interop.Outlook;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -18,7 +20,8 @@ namespace EmailMemoryClass
     {
         #region fields
         OutlookApp _olApp;
-        public readonly TimerPlus _timer;
+        public readonly TimerPlus _searchTimer;
+        public readonly TimerPlus _outlookTimer;
         public bool _isSearchRunning = false;
         public bool _isSearchPaused = false;
         private bool _firstRun = true;
@@ -29,6 +32,7 @@ namespace EmailMemoryClass
         #region properties
         public string EmailAddress { get; set; }
         public string SearchPhrase { get; set; }
+        public bool IsOutlookOpen { get; set; }
         public int SearchSize { get; set; } = 250;
         public int SearchTime { get; set; } = 0;
         public int MaxDisplayItems { get; set; } = 10;
@@ -72,12 +76,17 @@ namespace EmailMemoryClass
             TimerInterval = config.TimerInterval;
             MaxDisplayItems = config.DisplayItems;
 
-            _timer = new TimerPlus(TimerInterval * 1000) { AutoReset = true };
-            _timer.Start();
+            _searchTimer = new TimerPlus(TimerInterval * 1000) { AutoReset = true };
+            _outlookTimer = new TimerPlus(2000) { AutoReset = true };
+
+            _searchTimer.Start();
+            _outlookTimer.Start();
 
             // register events
 
-            _timer.Elapsed += TimerElapsed;
+            _searchTimer.Elapsed += TimerElapsed;
+            _outlookTimer.Elapsed += CheckOutlookStatus;
+
             OnSearchErrorOccurred += ErrorHandler;
             OnFindErrorOccurred += SearchError;
             OnFindComplete += SearchComplete;
@@ -87,13 +96,19 @@ namespace EmailMemoryClass
             OnServiceStart?.Invoke(this, EventArgs.Empty);
         }
 
+        async void CheckOutlookStatus(object sender, ElapsedEventArgs e)
+        {
+            await Task.Run(() => {
+                IsOutlookOpen = System.Diagnostics.Process.GetProcessesByName("OUTLOOK").Any();
 
+                if (!IsOutlookOpen)
+                    Logger.Log("Waiting for outlook to start", "Warning");
+            });
+        }
 
         public OutlookSearch()
         {
-            _timer = new TimerPlus(TimerInterval * 1000) { AutoReset = true };
-            _timer.Elapsed += TimerElapsed;
-            _timer.Start();
+
         }
 
         public OutlookSearch(bool testing)
@@ -114,23 +129,22 @@ namespace EmailMemoryClass
         #region events
         async void TimerElapsed(object sender, ElapsedEventArgs e)
         {
-            Logger.Log("calling asynchronous timer elapsed in outlook search." + "isSearchRunning: " + _isSearchRunning.ToString() + "isSearchPaused: " + _isSearchPaused.ToString() + $"Has Error: {_hasError}", "Verbose");
-            SetTimer();
-            await Task.Run(RunSearch);
+            //SetTimer();
+            //await Task.Run(RunSearch);
         }
 
         void SetTimer()
         {
             if (_hasError)
-                _timer.SetInterval(5000);
+                _searchTimer.SetInterval(5000);
             else
-                _timer.SetInterval(TimerInterval * 1000);
+                _searchTimer.SetInterval(TimerInterval * 1000);
         }
 
         async void OnStart(object sender, EventArgs e)
         {
-            Logger.Log("Calling OnOutlookStartup event");
-            await Task.Run(RunSearch);
+            //Logger.Log("Calling OnOutlookStartup event");
+            //await Task.Run(RunSearch);
         }
 
         void ErrorHandler(object sender, EventArgs e)
@@ -141,7 +155,7 @@ namespace EmailMemoryClass
         public void OutlookErrorOccurred(object sender)
         {
             HasError = true;
-            _timer.Interval = 5000;
+            _searchTimer.Interval = 5000;
         }
 
         void SearchComplete(object sender, EventArgs e)
@@ -170,6 +184,7 @@ namespace EmailMemoryClass
                 
         }
 
+
         /// <summary>
         /// used to asynchronously add files to EmailsFoundList
         /// </summary>
@@ -193,7 +208,7 @@ namespace EmailMemoryClass
             try
             {
                 _olApp = new OutlookApp();
-                account = GetAccount();
+                account = GetAccountExplicit();
 
                 if (account == null)
                     throw new ApplicationException("Failed to extract email account");
@@ -220,6 +235,7 @@ namespace EmailMemoryClass
                         if (!string.IsNullOrEmpty(body) && body.Contains(this.SearchPhrase))
                         {
                             AddToList(new Email(mailItem));
+                            
                         }
                     }
 
@@ -277,7 +293,7 @@ namespace EmailMemoryClass
                 try
                 {
                     _olApp = new OutlookApp();
-                    account = GetAccount();
+                    account = GetAccountExplicit();
 
                     if (account == null)
                         throw new ApplicationException("Failed to extract email account");
@@ -338,8 +354,11 @@ namespace EmailMemoryClass
         /// Loops through inboxes and checks for entries matching EmailAddress property
         /// </summary>
         /// <returns>returns MAPIFolder object for selected inbox</returns>
-        Outlook.MAPIFolder GetAccount()
+        Outlook.MAPIFolder GetAccountExplicit(string email =  null)
         {
+            if (email == null)
+                email = this.EmailAddress;
+
             Outlook.NameSpace ns = null;
             Outlook.Folders mailBoxes = null;
 
@@ -350,7 +369,7 @@ namespace EmailMemoryClass
 
                 foreach (Outlook.MAPIFolder f in mailBoxes)
                 {
-                    if (f.Name == this.EmailAddress)
+                    if (f.Name == email)
                         return f;
                 }
 

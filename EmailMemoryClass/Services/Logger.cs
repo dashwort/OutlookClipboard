@@ -195,12 +195,19 @@ namespace EmailMemoryClass
 
         private async Task<bool> WriteAsync(string Entry)
         {
-            if (FileNotInUse(FilePathLocation + FileName))
+            try
             {
-                await Task.Run(() => File.AppendAllText((FilePathLocation + FileName), Entry));
-                return true;
+                if (FileNotInUse(FilePathLocation + FileName))
+                {
+                    await Task.Run(() => File.AppendAllText((FilePathLocation + FileName), Entry));
+                    return true;
+                }
             }
-
+            catch (Exception)
+            {
+                return false;
+            }
+            
             return false;
         }
     }

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:WpfUI.Views"
         mc:Ignorable="d"
         Title="Configuration Wizard" 
-        Height="360" Width="570" Background="#36507e" ResizeMode="NoResize">
+        Height="360" Width="630" Background="#36507e" ResizeMode="NoResize">
 
     <Grid>
 
